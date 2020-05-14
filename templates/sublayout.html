@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="/static/favicon.ico" rel="icon">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/themify-icons.css" />
+
+    <link href="/static/style.css" rel="stylesheet">
+
+    <title>Ottawa Delivery</title>
+</head>
+
+<body>
+    <header id="header" class="default">
+
+        <ul class="menu-logo">
+            <li>
+                <a href="/" class="hometitle"><span class="text-primary">190LEES</span><span class="text-warning"> STORE</span></a>
+            </li>
+        </ul>
+        <ul class="menu-links">
+            <li><a href="/"> Home</a>
+            </li>
+            <li class="stores"><a href="/stores"> Store </a>
+            </li>
+            {% if session.user_id %}
+            <li class="settings"><a href="/settings"> Settings</a>
+            </li>
+            <li class="cart"><a href="/cart"> Cart</a>
+            </li>
+            {% elif session.admin %}
+            <li class="adminsettings"><a href="/adminsettings"> Settings</a>
+            </li>
+            <li class="orders"><a href="/orders"> Orders</a>
+            </li>
+            <li><a href="/logout"> Logout</a>
+            </li>
+            {% else %}
+            <li><a href="/login"> Login</a>
+            </li>
+            {% endif %}
+        </ul>
+        <ul class="ti-menu menu-icon" id="menuIcon"></ul>
+    </header>
+
+
+    {% block main %}{% endblock %}
+
+
+    <footer class="small text-center text-muted">
+        &copy 2020 TinaWang
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        $('#menuIcon').on('click', () => {
+            $('.menu-links').css("right", "0");
+        })
+        var path = window.location.pathname.replace("/", "");
+        $('.' + path).addClass("active");
+
+        function gotoOpen() {
+            window.location.href = "/openstore"
+        }
+    </script>
+</body>
+
+</html>

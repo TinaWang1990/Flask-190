@@ -1,0 +1,19 @@
+{% extends "sublayout.html" %} {% block main %}
+<div class="register">
+    <h3 class="text-center">Login</h3>
+    <small class="text-danger">{{msg}}</small>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <input autofocus class="form-control" name="email" placeholder="Email" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <div>
+            <small>not register? <a class="text-warning text-decoration-none" href="/register">Start here</a></small>
+        </div>
+        <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+</div>
+
+{% endblock %}

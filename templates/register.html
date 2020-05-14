@@ -1,0 +1,25 @@
+{% extends "sublayout.html" %} {% block main %}
+<div class="register">
+    <h3 class="text-center">Register</h3>
+    <small class="text-danger">{{msg}}</small>
+    <form method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="email" placeholder="Email" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="Confirm Password" type="password">
+        </div>
+        <div>
+            <small>password must have at least 8 characters, contains numbers and capitical letters</small>
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+</div>
+
+{% endblock %}

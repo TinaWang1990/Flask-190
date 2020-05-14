@@ -1,0 +1,43 @@
+{% extends "sublayout.html" %} {% block main %}
+
+<div class="manage">
+    <div class="box m-4">
+        <div class="notice mt-4">
+            <h5>Update your product:</h5>
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group ">
+                    <label for="name ">Product name: {{pro.productname}}</label>
+                    <input type="text " class="form-control" id="name" name="name">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Choose Category:</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" name="cat">
+                        {% for cat in cats %}   
+                        <option value="{{cat.catid}}">{{cat.catname}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group ">
+                    <label for="price ">Product price: {{pro.productprice}}</label>
+                    <input type="text " class="form-control" id="price" name="price">
+                </div>
+                <div class="form-group ">
+                    <label for="des">Product description: {{pro.product_des}}</label>
+                    <input type="text " class="form-control" id="des" name="des">
+                </div>
+                <div class="form-group ">
+                    <label>Upload image: {{pro.productimg}}</label>
+                    <input type="file" class="form-control" name="photo">
+                </div>
+
+                <button class="btn btn-primary" type="submit ">Update</button>
+            </form>
+        </div>
+        <div class="text-center">
+            <a href="/manage/addcat"><button class="delbtn">Go back</button></a>
+        </div>
+    </div>
+</div>
+{% endblock %}

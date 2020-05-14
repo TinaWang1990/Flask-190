@@ -1,0 +1,31 @@
+{% extends "sublayout.html" %} {% block main %}
+
+<div class="openstore p-4">
+    <div class="notice">
+        <p>To be part of us, make sure you provide valid information.</p>
+        <small class="text-danger">{{msg}}</small>
+    </div>
+    <div class="sub">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="exampleInputStoreName">Your store name:</label>
+                <input type="text" class="form-control" id="exampleInputStoreName" name="storename" required>
+            </div>
+            <div class="form-group">
+                <label for="img">Upload your store images</label>
+                <input type="file" class="form-control" id="img" name="photo">
+            </div>
+            <div class="form-group">
+                <label for="des">Enter your store's stories</label>
+                <input class="form-control" id="des" name="des" placeholder="" type="text" required>
+            </div>
+            <div class="form-group">
+                <label for="notice">Give special noticements to customers</label>
+                <input class="form-control" id="notice" name="notice" placeholder="" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Create</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

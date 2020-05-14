@@ -1,0 +1,212 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+#header {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 30px;
+  z-index: 2;
+}
+#header ul {
+  list-style: none;
+  margin: 0;
+}
+#header ul.menu-logo a {
+  text-decoration: none;
+  cursor: pointer;
+}
+#header ul.menu-logo a span {
+  font-size: 25px;
+}
+#header ul.menu-links {
+  display: flex;
+  flex-direction: row;
+}
+#header ul.menu-links li > a {
+  color: #21252975;
+  font-size: 20px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px;
+}
+#header ul.menu-links li > a:hover {
+  border-bottom: 2px solid orange;
+}
+#header ul.menu-links li.active > a {
+  color: black;
+}
+#header ul.menu-icon {
+  display: none;
+}
+
+#header.transparent {
+  background: none;
+  color: black;
+  position: absolute;
+  height: 100px;
+}
+
+#header.default {
+  position: relative;
+  height: 100px;
+  box-shadow: 1px 1px 2px 2px #00000039;
+}
+
+.home {
+  margin: 0;
+  padding: 0;
+  min-width: 500px;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+.home .main {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  min-height: 500px;
+  background-image: url("/static/undraw_on_the_way_ldaq.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 2;
+  color: white;
+}
+.home .main .title {
+  z-index: 99;
+  color: black;
+}
+
+.about {
+  width: 100%;
+  height: 500px;
+  padding: 50px;
+}
+.about .info {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+}
+.about .info p {
+  color: #545b62;
+  font-weight: 400;
+}
+.about img {
+  width: 100%;
+  height: 100%;
+}
+
+#modal {
+  display: none;
+}
+
+.modal {
+  top: 30% !important;
+}
+
+.register {
+  padding: 50px;
+}
+
+.group .box {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-column-gap: 10px;
+  grid-row-gap: 20px;
+  margin: 0;
+  padding: 50px 20px;
+  width: 100%;
+  justify-items: center;
+}
+.group .box .card {
+  width: 300px;
+}
+
+.settings button {
+  border-radius: 20px;
+  border: 1px solid blue;
+  padding: 5px 20px;
+  background-color: none;
+}
+.settings button:hover {
+  background-color: #7a7ae6;
+  border: 1px solid #7a7ae6;
+}
+.settings button:hover a {
+  color: white;
+}
+.settings button a {
+  text-decoration: none;
+  color: black;
+}
+.settings .store img {
+  width: 100%;
+}
+.settings .store .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+}
+.settings .store .right p {
+  border-bottom: 2px solid orange;
+  width: fit-content;
+  margin-bottom: 5px;
+}
+.settings .store .right button {
+  width: max-content;
+}
+
+@media only screen and (max-width: 800px) {
+  #header ul.menu-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    min-height: 500px;
+    background: url("/static/undraw_on_the_way_ldaq.png");
+    transition: all 0.5s ease-in-out;
+  }
+  #header ul.menu-links li {
+    padding: 10px 0;
+  }
+  #header ul.menu-links li a {
+    font-size: 25px;
+  }
+  #header ul.menu-links li a:hover {
+    border-bottom: none;
+  }
+  #header ul.menu-icon {
+    display: flex;
+    font-size: 20px;
+  }
+}
+@media (max-width: 600px) {
+  #header {
+    padding: 0 10px;
+  }
+  #header ul.menu-logo a span {
+    font-size: 20px;
+  }
+
+  .home .main .title h1 {
+    font-size: 30px;
+    padding-left: 30px;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

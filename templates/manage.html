@@ -1,0 +1,23 @@
+{% extends "sublayout.html" %} {% block main %}
+
+<div class="manage">
+    <div class="box m-4">
+        <div class="notice">
+            <form method="post">
+                <div class="form-group">
+                    <label for="exampleInputProductName">Update your noticement:</label>
+                    <input type="text" class="form-control" name="notice" required>
+                </div>
+                <button class="btn btn-primary" type="submit">Update</button>
+            </form>
+        </div>
+        <hr>
+        <a href="/manage/addcat"><button class="delbtn">Add Categories</button></a>
+
+        <hr>
+        <a href="/manage/additems"><button class="delbtn">Add Products</button></a>
+
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "sublayout.html" %} {% block main %}
+
+<div class="group">
+    <div class="notice m-4">
+        <h4>Noticement:</h4>
+        <p class="border border-warning p-3">{{notice}}</p>
+        {% if session.admin %}
+        <a href="/manage" class="btn btn-primary">Update Noticement</a> {% endif %}
+    </div>
+    <div class="box">
+        {% for cat in cats %}
+        <div class="card" style="width: 18rem;">
+            <img src="/static/uploads/{{cat.catimg}}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{cat.catname}}</h5>
+                <a href="/cat/{{cat.catid}}" class="btn btn-primary">view</a>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}
