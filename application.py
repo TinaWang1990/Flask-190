@@ -21,7 +21,7 @@ app = Flask(__name__)
 api = Api(app)
 
 # connect database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Smile2014@localhost/delivery'
+app.config['SQLALCHEMY_DATABASE_URI'] = 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
 db = SQLAlchemy(app)
