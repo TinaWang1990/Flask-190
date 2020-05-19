@@ -4,16 +4,19 @@
     <small class="text-danger">{{msg}}</small>
     <form method="post">
         <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+            <input autofocus class="form-control" name="username" placeholder="Username" type="text" required>
         </div>
         <div class="form-group">
-            <input class="form-control" name="email" placeholder="Email" type="text">
+            <input class="form-control" name="email" placeholder="Email" type="email" required>
         </div>
         <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
+            <input class="form-control" name="phone" placeholder="Phone number" type="text" required>
         </div>
         <div class="form-group">
-            <input class="form-control" name="confirmation" placeholder="Confirm Password" type="password">
+            <input class="form-control" name="password" placeholder="Password" type="password" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="Confirm Password" type="password" required>
         </div>
         <div>
             <small>password must have at least 8 characters, contains numbers and capitical letters</small>

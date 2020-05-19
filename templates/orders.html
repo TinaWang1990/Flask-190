@@ -1,0 +1,53 @@
+{% extends "sublayout.html" %} {% block main %}
+
+<div class="group p-3">
+    <h3>All new orders: </h3>
+    {% for cart in carts %}
+    <p class="mt-2">
+        <a class="btn btn-primary" data-toggle="collapse" href="#{{cart[0][0].ordernum}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+           Order Number: {{cart[0][0].ordernum}}
+        </a>
+    </p>
+    <div class="collapse mt-2" id="{{cart[0][0].ordernum}}">
+
+        <div class="card card-body">
+            Order time: {{cart[0][0].time.strftime('%Y-%m-%d') }}
+        </div>
+        <div class="card card-body">
+            Contact Info: {{cart[0][1].username }} <br> Email: {{cart[0][1].email}}
+        </div>
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product Price</th>
+                    <th scope="col">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in cart %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{order[0].productname}}</td>
+                    <td>$ {{order[0].productprice}}</td>
+                    <td>{{order[0].amount}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <th scope="row">Total Price:</th>
+                    <td></td>
+                    <td></td>
+                    <td>$ {{total[loop.index-1]}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="card card-body">
+            <button type="button" class="btn btn-danger">
+               <a href="/orderdone/{{cart[0][0].ordernum}}" class="text-decoration-none text-white">Done</a> 
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

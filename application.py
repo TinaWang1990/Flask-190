@@ -1,6 +1,7 @@
 import re
 import json
 import os
+import uuid
 
 from flask import Flask, redirect, render_template, request, session, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -35,11 +36,13 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30))
     email = db.Column(db.String(120), unique=True)
+    phone = db.Column(db.String(30))
     password = db.Column(db.String(1000))
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, phone, password):
         self.username = username
         self.email = email
+        self.phone = phone
         self.password = password
     
     def __repr__(self):
@@ -88,14 +91,16 @@ class Store(db.Model):
 class Cart(db.Model):
     cartid = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer)
+    ordernum = db.Column(db.String(100))
     productname = db.Column(db.String(100))
     productprice = db.Column(db.String(30))
     amount = db.Column(db.Integer)
     isdone = db.Column(db.Boolean)
     time = db.Column(db.DateTime)
 
-    def __init__(self, userid, productname, productprice, amount, isdone, time):
+    def __init__(self, userid, ordernum, productname, productprice, amount, isdone, time):
         self.userid = userid
+        self.ordernum = ordernum
         self.productname = productname
         self.productprice = productprice
         self.amount = amount
@@ -158,6 +163,7 @@ def register():
     if request.method == "POST":
         username = request.form.get('username')
         email = request.form.get('email')
+        phone = request.form.get('phone')
         password = request.form.get('password')
         cpwd = request.form.get('confirmation')
 
@@ -169,6 +175,10 @@ def register():
             msg = "Email is empty!"
             return render_template("register.html", msg = msg)
         
+        if not phone:
+            msg = "Phone is empty!"
+            return render_template("register.html", msg = msg)
+
         if not password:
             msg = "Password is empty!"
             return render_template("register.html", msg = msg)
@@ -193,7 +203,7 @@ def register():
         hash = hashPassword(password)
 
         if db.session.query(User).filter(User.email == email).count() == 0:   
-            user = User(username, email, hash)
+            user = User(username, email, phone, hash)
             db.session.add(user)
             db.session.commit()
             # Redirect user to login page
@@ -552,7 +562,6 @@ def proupdate(id):
     else:
         return render_template("updatepro.html", pro = pro, cats = cats)
 
-
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
 def cart():
@@ -565,15 +574,92 @@ def cart():
 def submitPro():
     userid = session["user_id"]
     info = request.form["info"]
+    ordernum = uuid.uuid4().hex
     time = date.today()
-    print(json.loads(info)[0])
+
     for pro in json.loads(info):
         name = pro[1]
         price = pro[2]
         amount = pro[3]
-        cart = Cart(userid = userid, productname = name, productprice = price, amount = amount, 
+        cart = Cart(userid = userid, ordernum = ordernum, productname = name, productprice = price, amount = amount, 
         isdone = False, time = time)
         db.session.add(cart)
         db.session.commit()
 
-    return jsonify({"status":"sucess"})
+    return jsonify({"status":"sucess", "order": ordernum})
+
+@app.route("/orderhistory", methods=["GET", "POST"])
+@login_required
+def orderhistory():
+    """show order history"""
+    userid = session["user_id"]
+    orders = Cart.query.filter_by(userid=userid).all()
+    print(orders)
+    carts = []
+    total = []
+    i = " "
+    sum = 0
+    count = -1
+    for order in orders:
+        num = order.ordernum
+        if not i == num:
+            i = num
+            count+=1
+            print("count", count)
+            if not count == 0:
+                total.append(sum)
+                print("total:", total)
+            sum = 0
+            carts.append([])
+            carts[len(carts)-1].append(order)
+            sum = sum + float(order.productprice) * float(order.amount)
+            print(sum)
+        else:
+            carts[len(carts)-1].append(order)
+            sum = sum + float(order.productprice) * float(order.amount)
+            print(sum)
+    total.append(sum)
+    print("total:", total)
+    return render_template("orderhistory.html", carts = carts, total = total)
+
+
+@app.route("/orders", methods=["GET", "POST"])
+@admin_required
+def orders():
+    orders = db.session.query(Cart, User).outerjoin(User, Cart.userid == User.id).filter(Cart.isdone == False).order_by(Cart.time.desc()).all()
+    print(orders)
+    carts = []
+    total = []
+    i = " "
+    sum = 0
+    count = -1
+    for order in orders:
+        num = order[0].ordernum
+        if not i == num:
+            i = num
+            count+=1
+            if not count == 0:
+                total.append(sum)
+
+            sum = 0
+            carts.append([])
+            carts[len(carts)-1].append(order)
+            sum = sum + float(order[0].productprice) * float(order[0].amount)
+
+        else:
+            carts[len(carts)-1].append(order)
+            sum = sum + float(order[0].productprice) * float(order[0].amount)
+            
+    total.append(sum)
+    print(carts[0][0][1].username)
+    return render_template("orders.html", carts = carts, total = total)
+
+@app.route("/orderdone/<string:id>", methods=["GET", "POST"])
+@admin_required
+def orderdone(id):
+    """mark finished order"""
+    print(id)
+    rows = Cart.query.filter_by(ordernum = id).update(dict(isdone = True))
+    db.session.commit()
+
+    return redirect("/orders")
