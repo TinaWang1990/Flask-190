@@ -13,7 +13,7 @@
 
     <link href="/static/style.css" rel="stylesheet">
 
-    <title>Ottawa Delivery</title>
+    <title>190LEES STORE</title>
 </head>
 
 <body>
@@ -72,6 +72,56 @@
 
         function gotoOpen() {
             window.location.href = "/openstore"
+        }
+
+        function move() {
+            value = document.getElementById("amount").value
+            if (value == 1) {
+                document.getElementById("amount").value = 1;
+            } else {
+                document.getElementById("amount").value = parseInt(value) - 1;
+            }
+        }
+
+        function add() {
+            value = document.getElementById("amount").value
+            document.getElementById("amount").value = parseInt(value) + 1;
+        }
+
+        function addCart() {
+            let pros = localStorage.getItem("pros") ?
+                JSON.parse(localStorage.getItem("pros")) : [];
+
+
+            amount = document.getElementById("amount").value
+            proname = document.getElementById("name").textContent
+            price = document.getElementById("price").textContent
+            count = pros.filter(el => el[1] == proname)
+
+            console.log("count", count)
+            if (count.length > 0) {
+                pros.map(el => el[3] = (parseInt(el[3]) + parseInt(amount)).toString())
+            } else {
+                pro = []
+                pro[0] = create_UUID();
+                pro[1] = proname
+                pro[2] = price
+                pro[3] = amount
+                console.log(pro)
+
+                pros.push(pro)
+            }
+            localStorage.setItem("pros", JSON.stringify(pros));
+        }
+
+        function create_UUID() {
+            let s4 = () => {
+                    return Math.floor((1 + Math.random()) * 0x10000)
+                        .toString(16)
+                        .substring(1);
+                }
+                //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
         }
     </script>
 </body>

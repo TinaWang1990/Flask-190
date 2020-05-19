@@ -9,8 +9,11 @@
             <div class="card-body">
                 <h5 class="card-title">{{pro.productname}}</h5>
                 <div class="price text-danger">$ {{pro.productprice}}</div>
-                <small>{{pro.product_des}}</small>
-                <button class="btn btn-primary d-flex">Add to cart</button> {% if session.admin %}
+                <!-- <small>{{pro.product_des}}</small> -->
+                <a href="/showproduct/{{pro.productid}}">
+                    <button class="btn btn-primary d-flex">More</button>
+                </a>
+                {% if session.admin %}
                 <div class="d-flex mt-2">
                     <a href="/proupdate/{{pro.productid}}">
                         <button class="btn btn-primary">update</button>

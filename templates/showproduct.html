@@ -1,0 +1,36 @@
+{% extends "sublayout.html" %} {% block main %}
+
+<div class="group">
+
+    <div class="box">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <img src="/static/uploads/{{product.productimg}}" class="card-img-top" alt="...">
+                </div>
+                <div class="col-md-6 col-12">
+                    <h5 class="card-title" id="name">{{product.productname}}</h5>
+                    <div class="price text-danger">
+                        $ <span id="price">{{product.productprice}}</span>
+                    </div>
+                    <div class="my-2">Description: {{product.product_des}}</div>
+                    <div class="my-2">
+                        Amount:
+                        <button onclick="move()">-</button>
+                        <input id="amount" value="1"></input>
+                        <button onclick="add()">+</button>
+                    </div>
+                    {% if userid %}
+                    <button class="btn btn-primary d-flex" onclick="addCart()">
+                        Add to Cart
+                    </button> {% else %}
+                    <button class="btn btn-primary d-flex" disabled>
+                        Add to Cart
+                    </button>
+                    <small>Please login first </small> {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@ import re
 import json
 import os
 
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from tempfile import mkdtemp
@@ -10,7 +10,7 @@ from tempfile import mkdtemp
 from flask_uploads import UploadSet, configure_uploads, IMAGES
 
 from lib import login_required, admin_required, hashPassword, verifyPassword
-from datetime import datetime
+from datetime import date
 
 from flask_restful import Api, Resource
 from webargs import fields, validate
@@ -129,6 +129,7 @@ Session(app)
 
 @app.route('/')
 def hello_world():
+    # session[""]
     return render_template("home.html")
 
 @app.route('/adminlogin', methods=["GET", "POST"])
@@ -475,6 +476,14 @@ def showproducts(id):
 
     return render_template("showproducts.html", products = products, hasPro = hasPro)
 
+@app.route("/showproduct/<int:id>", methods=["GET", "POST"])
+def showproduct(id):
+    """show products"""
+    product = Store.query.filter_by(productid = id).first()
+    print(product)
+
+    return render_template("showproduct.html", product = product, userid = session["user_id"])
+
 @app.route("/prodelete/<int:id>", methods=["GET", "POST", "DELETE"])
 @admin_required
 def prodelete(id):
@@ -543,3 +552,28 @@ def proupdate(id):
     else:
         return render_template("updatepro.html", pro = pro, cats = cats)
 
+
+@app.route("/cart", methods=["GET", "POST"])
+@login_required
+def cart():
+    """show cart"""
+    return render_template("cart.html")
+
+
+@app.route("/submitPro", methods=["GET", "POST"])
+@login_required
+def submitPro():
+    userid = session["user_id"]
+    info = request.form["info"]
+    time = date.today()
+    print(json.loads(info)[0])
+    for pro in json.loads(info):
+        name = pro[1]
+        price = pro[2]
+        amount = pro[3]
+        cart = Cart(userid = userid, productname = name, productprice = price, amount = amount, 
+        isdone = False, time = time)
+        db.session.add(cart)
+        db.session.commit()
+
+    return jsonify({"status":"sucess"})

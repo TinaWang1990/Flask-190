@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="/static/favicon.ico" rel="icon">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/themify-icons.css" />
+
+    <link href="/static/style.css" rel="stylesheet">
+
+    <title>190LEES STORE</title>
+</head>
+
+<body>
+    <header id="header" class="default">
+
+        <ul class="menu-logo">
+            <li>
+                <a href="/" class="hometitle"><span class="text-primary">190LEES</span><span class="text-warning"> STORE</span></a>
+            </li>
+        </ul>
+        <ul class="menu-links">
+            <li><a href="/"> Home</a>
+            </li>
+            <li class="stores"><a href="/stores"> Store </a>
+            </li>
+            {% if session.user_id %}
+            <li class="settings"><a href="/settings"> Settings</a>
+            </li>
+            <li class="cart"><a href="/cart"> Cart</a>
+            </li>
+            {% elif session.admin %}
+            <li class="adminsettings"><a href="/adminsettings"> Settings</a>
+            </li>
+            <li class="orders"><a href="/orders"> Orders</a>
+            </li>
+            <li><a href="/logout"> Logout</a>
+            </li>
+            {% else %}
+            <li><a href="/login"> Login</a>
+            </li>
+            {% endif %}
+        </ul>
+        <ul class="ti-menu menu-icon" id="menuIcon"></ul>
+    </header>
+    <div class="cart p-5">
+        <h3>Your orders:</h3>
+        <table class="table" id="table">
+        </table>
+        <small class="text-danger" id="msg"></small>
+    </div>
+
+    <footer class="small text-center text-muted">
+        &copy 2020 TinaWang
+    </footer>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        var path = window.location.pathname.replace("/", "");
+        $('.' + path).addClass("active");
+
+        showPros();
+
+        function showPros() {
+            let pros = localStorage.getItem("pros") ?
+                JSON.parse(localStorage.getItem("pros")) : [];
+            let table = document.getElementById("table");
+            if (pros.length != 0) {
+                const thead = document.createElement('thead');
+                const tr = document.createElement('tr')
+                const th1 = document.createElement('th')
+                const th2 = document.createElement('th')
+                const th3 = document.createElement('th')
+                const th4 = document.createElement('th')
+                const th5 = document.createElement('th')
+                th1.innerHTML = "#"
+                th1.setAttribute("scope", "col")
+                th2.innerHTML = "Product Name"
+                th2.setAttribute("scope", "col")
+                th3.innerHTML = "Product Price"
+                th3.setAttribute("scope", "col")
+                th4.innerHTML = "Amount"
+                th4.setAttribute("scope", "col")
+                th5.innerHTML = "   Manage"
+                th5.setAttribute("scope", "col")
+                tr.appendChild(th1);
+                tr.appendChild(th2);
+                tr.appendChild(th3);
+                tr.appendChild(th4);
+                tr.appendChild(th5);
+                thead.appendChild(tr);
+                table.appendChild(thead)
+
+                let tbody = document.createElement("tbody");
+                let count = 0;
+                let total = 0;
+                pros.forEach(element => {
+                    count++;
+                    const tr = document.createElement('tr')
+                    const th = document.createElement('th')
+                    const td1 = document.createElement('td')
+                    const td2 = document.createElement('td')
+                    const td3 = document.createElement('td')
+                    const td4 = document.createElement('td')
+
+                    th.innerHTML = count;
+                    td1.innerHTML = element[1];
+                    td2.innerHTML = "$ " + element[2];
+                    td3.innerHTML = element[3];
+                    td4.innerHTML = `<button class="btn btn-danger" id="` + element[0] + `" onclick="deletePro(event)">delete</button>`;
+
+                    tr.appendChild(th);
+                    tr.appendChild(td1);
+                    tr.appendChild(td2);
+                    tr.appendChild(td3);
+                    tr.appendChild(td4);
+                    tbody.appendChild(tr);
+
+                    // total price
+                    total += parseFloat(element[2]) * parseFloat(element[3])
+                });
+                const tr1 = document.createElement('tr')
+                const th = document.createElement('th')
+                const td1 = document.createElement('td')
+                const td2 = document.createElement('td')
+                const td3 = document.createElement('td')
+                const td4 = document.createElement('td')
+                th.innerHTML = "Total Price";
+                td4.innerHTML = "$ " + total;
+
+                tr1.appendChild(th);
+                tr1.appendChild(td1);
+                tr1.appendChild(td2);
+                tr1.appendChild(td3);
+                tr1.appendChild(td4);
+                tbody.appendChild(tr1);
+
+                table.appendChild(tbody);
+
+                const button = document.createElement('button')
+                button.setAttribute("type", "button");
+                button.setAttribute("class", "btn btn-primary")
+                button.setAttribute("onclick", "addToServer()")
+                button.innerHTML = "Submit"
+
+                table.appendChild(button)
+            } else {
+                table.innerHTML = "No product is selected!"
+            }
+        }
+
+        function deletePro(e) {
+            let id = event.target.id;
+            let pros = localStorage.getItem("pros") ?
+                JSON.parse(localStorage.getItem("pros")) : [];
+            pros = pros.filter(el => el[0] != id);
+            console.log(pros)
+            localStorage.setItem("pros", JSON.stringify(pros));
+            document.getElementById("table").innerHTML = "";
+            showPros();
+        };
+
+        function addToServer() {
+            let pros = localStorage.getItem("pros")
+            $.ajax({
+                    data: {
+                        info: pros
+                    },
+                    type: "POST",
+                    url: "/submitPro"
+                })
+                .done(function(data) {
+                    console.log(data.status)
+                    if (data.status = "sucess") {
+                        document.getElementById("msg").innerHTML = "Your order has submited sucessfully!"
+                        localStorage.removeItem("pros")
+                    }
+
+                })
+        }
+    </script>
+</body>
+
+</html>
