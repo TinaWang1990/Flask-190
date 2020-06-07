@@ -32,7 +32,13 @@
             {% if session.user_id %}
             <li class="settings"><a href="/settings"> Settings</a>
             </li>
-            <li class="cart"><a href="/cart"> Cart</a>
+            <li class="cart">
+                <a href="/cart"> 
+                    Cart
+                    <div id="num">
+                        
+                    </div>
+                </a>
             </li>
             {% elif session.admin %}
             <li class="adminsettings"><a href="/adminsettings"> Settings</a>
@@ -69,6 +75,8 @@
         })
         var path = window.location.pathname.replace("/", "");
         $('.' + path).addClass("active");
+
+        showCount()
 
         function gotoOpen() {
             window.location.href = "/openstore"
@@ -107,11 +115,19 @@
                 pro[1] = proname
                 pro[2] = price
                 pro[3] = amount
-                console.log(pro)
 
                 pros.push(pro)
             }
             localStorage.setItem("pros", JSON.stringify(pros));
+
+            showCount()
+        }
+
+        function showCount() {
+            count = JSON.parse(localStorage.getItem("pros")).length
+            if (count > 0) {
+                document.getElementById("num").innerHTML = `<span class="count"> ` + count + ` </span> `
+            }
         }
 
         function create_UUID() {

@@ -1,12 +1,13 @@
 {% extends "sublayout.html" %} {% block main %}
 
 <div class="group p-3">
+    {% if hasOrder %}
     <h3>All new orders: </h3>
     {% for cart in carts %}
     <p class="mt-2">
         <a class="btn btn-primary" data-toggle="collapse" href="#{{cart[0][0].ordernum}}" role="button" aria-expanded="false" aria-controls="collapseExample">
-           Order Number: {{cart[0][0].ordernum}}
-        </a>
+            Order Number: {{cart[0][0].ordernum}}
+            </a>
     </p>
     <div class="collapse mt-2" id="{{cart[0][0].ordernum}}">
 
@@ -42,12 +43,16 @@
                 </tr>
             </tbody>
         </table>
-        <div class="card card-body">
-            <button type="button" class="btn btn-danger">
-               <a href="/orderdone/{{cart[0][0].ordernum}}" class="text-decoration-none text-white">Done</a> 
-            </button>
+        <div class="card card-body text-center">
+            <a href="/orderdone/{{cart[0][0].ordernum}}" class="text-decoration-none text-white">
+                <button type="button" class="btn btn-danger">
+                Done
+                </button>
+            </a>
         </div>
     </div>
-    {% endfor %}
+    {% endfor %} {% else %}
+    <h3>No new order </h3>
+    {% endif %}
 </div>
 {% endblock %}

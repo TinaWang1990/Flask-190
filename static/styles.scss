@@ -40,6 +40,18 @@ body {
             li.active>a {
                 color: black;
             }
+            .cart>a {
+                position: relative;
+            }
+            .cart #num {
+                position: absolute;
+                top: 0;
+                right: 0;
+                .count {
+                    text-align: center;
+                    color: red;
+                }
+            }
         }
         &.menu-icon {
             display: none;

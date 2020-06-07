@@ -49,7 +49,7 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 class Stores(db.Model):
-    storeid = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     notice = db.Column(db.Text)
 
     def __init__(self, notice):
@@ -131,6 +131,7 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
 
 @app.route('/')
 def hello_world():
@@ -367,15 +368,12 @@ def manage():
     """show manage"""
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        admin_id = session["admin"]
         notice = request.form.get("notice")
-
-        if notice:
-            store = Stores(notice)
-            db.session.add(store)
-            db.session.commit()
+        print(notice)
+        store = Stores.query.filter_by(id = 1).update(dict(notice = notice)) 
+        db.session.commit()
         
-        return render_template("manage.html")
+        return redirect("/stores")
     else:
         return render_template("manage.html")
 
@@ -405,7 +403,7 @@ def catedelete(id):
     """delete category"""
     cat = Categories.query.filter_by(catid=id).first()
     os.remove("static/uploads/"+cat.catimg)
-    print(cat)
+    
     db.session.delete(cat)
     db.session.commit()
 
@@ -490,9 +488,12 @@ def showproducts(id):
 def showproduct(id):
     """show products"""
     product = Store.query.filter_by(productid = id).first()
-    print(product)
-
-    return render_template("showproduct.html", product = product, userid = session["user_id"])
+    if session.get("user_id") == None:
+        userid = False
+    else:
+        userid = True
+    
+    return render_template("showproduct.html", product = product, userid = userid )
 
 @app.route("/prodelete/<int:id>", methods=["GET", "POST", "DELETE"])
 @admin_required
@@ -544,12 +545,16 @@ def proupdate(id):
         if not img:
             imgname = pro.productimg
         else:
+            # if not pro.productimg == "default_food.jpg":
+            #     os.remove("static/uploads/"+pro.productimg)
+
             imgname = photos.save(request.files['photo'])
+            
             rows_update = Store.query.filter_by(productid=id).update(dict(
                 catid = catid, productname = proname, productprice = price, productimg = imgname, product_des = des
             )) 
             db.session.commit()
-            os.remove("static/uploads/"+pro.productimg)
+            
             return redirect(url_for('showproducts', id = pro.catid))
             
 
@@ -627,32 +632,35 @@ def orderhistory():
 @admin_required
 def orders():
     orders = db.session.query(Cart, User).outerjoin(User, Cart.userid == User.id).filter(Cart.isdone == False).order_by(Cart.time.desc()).all()
-    print(orders)
-    carts = []
-    total = []
-    i = " "
-    sum = 0
-    count = -1
-    for order in orders:
-        num = order[0].ordernum
-        if not i == num:
-            i = num
-            count+=1
-            if not count == 0:
-                total.append(sum)
+    if len(orders) == 0:
+        hasOrder = False
+        return render_template("orders.html", hasOrder = hasOrder)
+    else:
+        carts = []
+        total = []
+        i = " "
+        sum = 0
+        count = -1
+        for order in orders:
+            num = order[0].ordernum
+            if not i == num:
+                i = num
+                count+=1
+                if not count == 0:
+                    total.append(sum)
 
-            sum = 0
-            carts.append([])
-            carts[len(carts)-1].append(order)
-            sum = sum + float(order[0].productprice) * float(order[0].amount)
+                sum = 0
+                carts.append([])
+                carts[len(carts)-1].append(order)
+                sum = sum + float(order[0].productprice) * float(order[0].amount)
 
-        else:
-            carts[len(carts)-1].append(order)
-            sum = sum + float(order[0].productprice) * float(order[0].amount)
-            
-    total.append(sum)
-    print(carts[0][0][1].username)
-    return render_template("orders.html", carts = carts, total = total)
+            else:
+                carts[len(carts)-1].append(order)
+                sum = sum + float(order[0].productprice) * float(order[0].amount)
+                
+        total.append(sum)
+        hasOrder = True
+        return render_template("orders.html", carts = carts, total = total, hasOrder = hasOrder)
 
 @app.route("/orderdone/<string:id>", methods=["GET", "POST"])
 @admin_required

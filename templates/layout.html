@@ -42,6 +42,14 @@
         if (!ca.indexOf("loadhome=yes")) {
             $('#modal').click();
         }
+        showCount()
+
+        function showCount() {
+            count = JSON.parse(localStorage.getItem("pros")).length
+            if (count > 0) {
+                document.getElementById("num").innerHTML = `<span class="count"> ` + count + ` </span> `
+            }
+        }
     </script>
 </body>
 

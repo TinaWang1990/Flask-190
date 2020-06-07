@@ -32,7 +32,13 @@
             {% if session.user_id %}
             <li class="settings"><a href="/settings"> Settings</a>
             </li>
-            <li class="cart"><a href="/cart"> Cart</a>
+            <li class="cart">
+                <a href="/cart"> 
+                    Cart
+                    <div id="num">
+                   
+                    </div>
+                </a>
             </li>
             {% elif session.admin %}
             <li class="adminsettings"><a href="/adminsettings"> Settings</a>
@@ -67,6 +73,16 @@
         var path = window.location.pathname.replace("/", "");
         $('.' + path).addClass("active");
 
+        showCount()
+
+        function showCount() {
+            count = JSON.parse(localStorage.getItem("pros")).length
+            if (count > 0) {
+                document.getElementById("num").innerHTML = `<span class="count"> ` + count + ` </span> `
+            } else {
+                document.getElementById("num").innerHTML = ""
+            }
+        }
         showPros();
 
         function showPros() {
@@ -166,6 +182,7 @@
             localStorage.setItem("pros", JSON.stringify(pros));
             document.getElementById("table").innerHTML = "";
             showPros();
+            showCount()
         };
 
         function addToServer() {

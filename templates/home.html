@@ -14,7 +14,13 @@
         {% if session.user_id %}
         <li class="settings"><a href="/settings"> Settings</a>
         </li>
-        <li class="cart"><a href="/cart"> Cart</a>
+        <li class="cart">
+            <a href="/cart"> 
+                Cart
+                <div id="num">
+                    
+                </div>
+            </a>
         </li>
         {% elif session.admin %}
         <li class="adminsettings"><a href="/adminsettings"> Settings</a>

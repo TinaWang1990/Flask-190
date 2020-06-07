@@ -43,6 +43,18 @@ body {
 #header ul.menu-links li.active > a {
   color: black;
 }
+#header ul.menu-links .cart > a {
+  position: relative;
+}
+#header ul.menu-links .cart #num {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#header ul.menu-links .cart #num .count {
+  text-align: center;
+  color: red;
+}
 #header ul.menu-icon {
   display: none;
 }
